@@ -1,0 +1,320 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Color(0xffeb83a6), // Dark pinkish color for app bar
+        scaffoldBackgroundColor:
+            Color(0xffed96b3), // Light pinkish color for background
+      ),
+      debugShowCheckedModeBanner: false,
+      home: UserTypeSelectionPage(),
+    );
+  }
+}
+
+// ... (rest of your code remains unchanged)
+
+class UserTypeSelectionPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('RecycleBin'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            UserTypeIcon(
+              userType: UserType.admin,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminScreen()),
+                );
+              },
+            ),
+            SizedBox(height: 16),
+            UserTypeIcon(
+              userType: UserType.user,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserScreen()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AdminScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('RecycleBin - Admin'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UserTypeSelectionPage()),
+                (route) => false,
+              );
+            },
+            icon: Icon(Icons.logout),
+          ),
+          IconButton(
+            onPressed: () {
+              // Admin: View Profile
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
+            },
+            icon: Icon(Icons.account_circle),
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: () {
+                // Admin: Upload Product
+                print('Admin: Upload Product');
+              },
+              icon: Icon(Icons.cloud_upload), // Change to your upload icon
+              iconSize: 50,
+            ),
+            SizedBox(height: 16),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.red, // Change to your desired color
+              child: IconButton(
+                onPressed: () {
+                  // Admin: Cancel Product
+                  print('Admin: Cancel Product');
+                },
+                icon: Icon(Icons.cancel), // Change to your cancel icon
+                iconSize: 50,
+              ),
+            ),
+            SizedBox(height: 16),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.green, // Change to your desired color
+              child: IconButton(
+                onPressed: () {
+                  // Admin: Confirmation Order
+                  print('Admin: Confirmation Order');
+                },
+                icon: Icon(Icons.check), // Change to your confirmation icon
+                iconSize: 50,
+              ),
+            ),
+            SizedBox(height: 16),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.blue, // Change to your desired color
+              child: IconButton(
+                onPressed: () {
+                  // Admin: Delivery Option
+                  print('Admin: Delivery Option');
+                },
+                icon:
+                    Icon(Icons.local_shipping), // Change to your delivery icon
+                iconSize: 50,
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            label: 'Account',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ProfilePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Profile'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: AssetImage(
+                  'assets/dummy_profile_picture.jpg'), // Replace with your dummy profile picture
+            ),
+            SizedBox(height: 16),
+            Text('John Doe',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            SizedBox(height: 8),
+            Text('Age: 30'),
+            SizedBox(height: 8),
+            Text('Phone: 123-456-7890'),
+            SizedBox(height: 8),
+            Text('Address: 123 Main St, City'),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to update profile page
+                print('Navigate to Update Profile Page');
+              },
+              child: Text('Update Profile'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UserScreen extends StatelessWidget {
+  final List<Product> products = [
+    Product(name: 'Electric Product', icon: Icons.flash_on),
+    Product(name: 'Cloth', icon: Icons.shopping_bag),
+    Product(name: 'Shoes', icon: Icons.shopping_cart),
+    // Add more products as needed
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('RecycleBin - User'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UserTypeSelectionPage()),
+                (route) => false,
+              );
+            },
+            icon: Icon(Icons.logout),
+          ),
+          IconButton(
+            onPressed: () {
+              // User: View Profile
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
+            },
+            icon: Icon(Icons.account_circle),
+          ),
+        ],
+      ),
+      body: ListView.builder(
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: Icon(products[index].icon),
+            title: Text(products[index].name),
+            // Add more details or actions for each product as needed
+          );
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Cart',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Product {
+  final String name;
+  final IconData icon;
+
+  Product({required this.name, required this.icon});
+}
+
+enum UserType {
+  admin,
+  user,
+}
+
+class UserTypeIcon extends StatelessWidget {
+  final UserType userType;
+  final VoidCallback onTap;
+
+  const UserTypeIcon({
+    required this.userType,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    IconData iconData =
+        userType == UserType.admin ? Icons.admin_panel_settings : Icons.person;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.pink.shade50,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(
+          iconData,
+          size: 50,
+          color: Colors.black,
+        ),
+      ),
+    );
+  }
+}
